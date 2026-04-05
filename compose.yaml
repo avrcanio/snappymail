@@ -48,6 +48,20 @@ services:
       - traefik.http.routers.snappymail.entrypoints=websecure
       - traefik.http.routers.snappymail.tls=true
       - traefik.http.routers.snappymail.tls.certresolver=${TRAEFIK_CERT_RESOLVER:-cloudflare}
+      - traefik.http.routers.snappymail-nextcloud.rule=Host(`cloud.finestar.hr`) && PathPrefix(`/webmail`)
+      - traefik.http.routers.snappymail-nextcloud.entrypoints=websecure
+      - traefik.http.routers.snappymail-nextcloud.tls=true
+      - traefik.http.routers.snappymail-nextcloud.tls.certresolver=${TRAEFIK_CERT_RESOLVER:-cloudflare}
+      - traefik.http.routers.snappymail-nextcloud.middlewares=snappymail-nextcloud-strip@docker,snappymail-nextcloud-headers@docker
+      - traefik.http.routers.snappymail-nextcloud.priority=110
+      - traefik.http.routers.snappymail-assets.rule=Host(`cloud.finestar.hr`) && PathPrefix(`/snappymail`)
+      - traefik.http.routers.snappymail-assets.entrypoints=websecure
+      - traefik.http.routers.snappymail-assets.tls=true
+      - traefik.http.routers.snappymail-assets.tls.certresolver=${TRAEFIK_CERT_RESOLVER:-cloudflare}
+      - traefik.http.routers.snappymail-assets.middlewares=snappymail-nextcloud-headers@docker
+      - traefik.http.routers.snappymail-assets.priority=110
+      - traefik.http.middlewares.snappymail-nextcloud-strip.stripprefix.prefixes=/webmail
+      - traefik.http.middlewares.snappymail-nextcloud-headers.headers.customResponseHeaders.X-Frame-Options=SAMEORIGIN
       - traefik.http.services.snappymail.loadbalancer.server.port=8888
     healthcheck:
       test:
