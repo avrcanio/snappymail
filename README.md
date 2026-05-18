@@ -120,7 +120,7 @@ Restore radi obrnutim redoslijedom: vratiti bind mount data i zatim obnoviti baz
 
 - SnappyMail ne sprema mail sadržaj lokalno; poruke ostaju na IMAP serveru.
 - PostgreSQL se ovdje koristi za contacts/state koje SnappyMail podržava, ne za samu poštu.
-- Stack nije spojen na `mailserver_default`; prema mail backendu ide preko javnog FQDN-a `mail.finestar.hr`.
+- Stack je na `hetzner_net` uz `mailserver`; `mail.finestar.hr` se unutar Docker mreže resolvea na interni IP (isti TLS/SNI kao s hosta).
 - Nema novih bindanih host portova i nema promjena na postojećem `mailserver` stacku.
 
 ## 8. Test plan

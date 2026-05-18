@@ -41,6 +41,9 @@ services:
     networks:
       - proxy
       - postgis
+      # Reach mailserver on 993/587 via internal DNS (mail.finestar.hr -> container IP).
+      # Without this, PHP resolves the public IP and the connection times out (hairpin).
+      - hetzner_net
     labels:
       - traefik.enable=true
       - traefik.docker.network=proxy
@@ -78,4 +81,6 @@ networks:
   proxy:
     external: true
   postgis:
+    external: true
+  hetzner_net:
     external: true
