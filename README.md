@@ -1,11 +1,11 @@
-# SnappyMail stack for `webmail.finestar.hr`
+# SnappyMail stack for `webmail.finestar.hr` and `webmail.barakags.hr`
 
 Ovaj stack pokreće zaseban SnappyMail webmail u `/opt/stacks/snappymail`, iza postojećeg Traefik proxyja, bez direktnog izlaganja portova na hostu. Mail sadržaj ostaje na postojećem IMAP/SMTP backendu `mail.finestar.hr`, dok SnappyMail koristi vlastiti app storage u lokalnom bind mountu i PostgreSQL za contacts/state koje aplikacija podržava.
 
 ## Što se ovdje deploya
 
 - `compose.yaml` za jedan SnappyMail container
-- Traefik routing za `https://webmail.finestar.hr`
+- Traefik routing za `https://webmail.finestar.hr` i `https://webmail.barakags.hr`
 - lokalni bind mount `./docker-data/snappymail` za SnappyMail config/cache/runtime data
 - wildcard domain konfiguracija tako da jedan SnappyMail instance prihvaća više mail domena na istom backendu
 - bootstrap koji upisuje admin lozinku iz `.env` i postavlja PostgreSQL contacts storage
@@ -16,8 +16,9 @@ Ovaj stack pokreće zaseban SnappyMail webmail u `/opt/stacks/snappymail`, iza p
 - postojeća eksterna Docker mreža `proxy`
 - postojeća eksterna Docker mreža `postgis`
 - postojeći Traefik sa resolverom iz `TRAEFIK_CERT_RESOLVER`
-- DNS zapis:
+- DNS zapisi:
   - `A webmail.finestar.hr -> 65.108.196.92`
+  - `A webmail.barakags.hr -> 65.108.196.92` (zona `barakags.hr` na Cloudflareu)
 - postojeći mail backend:
   - IMAP `mail.finestar.hr:993` preko `SSL/TLS`
   - SMTP `mail.finestar.hr:587` preko `STARTTLS`
@@ -37,6 +38,7 @@ Obavezno promijeni:
 Preporučene vrijednosti su već podešene za:
 
 - `WEBMAIL_HOST=webmail.finestar.hr`
+- `WEBMAIL_EXTRA_HOST=webmail.barakags.hr`
 - login s punim emailom, npr. `user@domena.tld`
 - wildcard multi-domain backend na `mail.finestar.hr`
 
@@ -69,6 +71,7 @@ docker compose logs -f snappymail
 Admin panel je dostupan na:
 
 - `https://webmail.finestar.hr/?admin`
+- `https://webmail.barakags.hr/?admin`
 
 Ovaj stack pri startu upisuje vrijednost `SNAPPYMAIL_ADMIN_PASSWORD` u SnappyMail config i u lokalni bootstrap file:
 
@@ -127,9 +130,9 @@ Restore radi obrnutim redoslijedom: vratiti bind mount data i zatim obnoviti baz
 
 DNS i web:
 
-- `webmail.finestar.hr` resolvea na server IP
-- Traefik servira TLS cert za `webmail.finestar.hr`
-- `https://webmail.finestar.hr` otvara login screen
+- `webmail.finestar.hr` i `webmail.barakags.hr` resolveaju na server IP (ili Cloudflare proxy)
+- Traefik servira TLS cert za oba hostnamea
+- `https://webmail.finestar.hr` i `https://webmail.barakags.hr` otvaraju isti login screen
 
 Mail:
 

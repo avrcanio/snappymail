@@ -47,7 +47,7 @@ services:
     labels:
       - traefik.enable=true
       - traefik.docker.network=proxy
-      - traefik.http.routers.snappymail.rule=Host(`${WEBMAIL_HOST}`)
+      - traefik.http.routers.snappymail.rule=Host(`${WEBMAIL_HOST}`) || Host(`${WEBMAIL_EXTRA_HOST}`)
       - traefik.http.routers.snappymail.entrypoints=websecure
       - traefik.http.routers.snappymail.tls=true
       - traefik.http.routers.snappymail.tls.certresolver=${TRAEFIK_CERT_RESOLVER:-cloudflare}
